@@ -16,14 +16,6 @@
       "A cozy and affordable room in a shared house in Hamburg. Close to public transport.",
       "A modern and stylish apartment located in the business district of Dusseldorf, ideal for professionals."
     ],
-    "publicationDates": [
-      "2024-10-10T10:00:00Z",
-      "2024-09-25T15:30:00Z",
-      "2024-08-15T09:00:00Z",
-      "2024-07-05T14:45:00Z",
-      "2024-06-20T11:15:00Z",
-      "2024-05-10T08:30:00Z"
-    ],
     "previewImages": [
       "paris-apartment-preview.jpg",
       "cologne-house-preview.jpg",
@@ -33,54 +25,12 @@
       "dusseldorf-apartment-preview.jpg"
     ],
     "images": [
-      [
-        "paris-apartment-1.jpg",
-        "paris-apartment-2.jpg",
-        "paris-apartment-3.jpg",
-        "paris-apartment-4.jpg",
-        "paris-apartment-5.jpg",
-        "paris-apartment-6.jpg"
-      ],
-      [
-        "cologne-house-1.jpg",
-        "cologne-house-2.jpg",
-        "cologne-house-3.jpg",
-        "cologne-house-4.jpg",
-        "cologne-house-5.jpg",
-        "cologne-house-6.jpg"
-      ],
-      [
-        "brussels-studio-1.jpg",
-        "brussels-studio-2.jpg",
-        "brussels-studio-3.jpg",
-        "brussels-studio-4.jpg",
-        "brussels-studio-5.jpg",
-        "brussels-studio-6.jpg"
-      ],
-      [
-        "amsterdam-hotel-1.jpg",
-        "amsterdam-hotel-2.jpg",
-        "amsterdam-hotel-3.jpg",
-        "amsterdam-hotel-4.jpg",
-        "amsterdam-hotel-5.jpg",
-        "amsterdam-hotel-6.jpg"
-      ],
-      [
-        "hamburg-room-1.jpg",
-        "hamburg-room-2.jpg",
-        "hamburg-room-3.jpg",
-        "hamburg-room-4.jpg",
-        "hamburg-room-5.jpg",
-        "hamburg-room-6.jpg"
-      ],
-      [
-        "dusseldorf-apartment-1.jpg",
-        "dusseldorf-apartment-2.jpg",
-        "dusseldorf-apartment-3.jpg",
-        "dusseldorf-apartment-4.jpg",
-        "dusseldorf-apartment-5.jpg",
-        "dusseldorf-apartment-6.jpg"
-      ]
+        "apartment-1.jpg",
+        "apartment-2.jpg",
+        "apartment-3.jpg",
+        "house-1.jpg",
+        "house-2.jpg",
+        "house-3.jpg"
     ],
     "authors": [
       "Sophie Dupont",
