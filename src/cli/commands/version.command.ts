@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { Command } from './command.interface.js';
+import { CliCommandInterface } from './command.interface.js';
 
 type PackageJSONConfig = {
   version: string;
@@ -15,7 +15,7 @@ function isPackageJSONConfig(value: unknown): value is PackageJSONConfig {
   );
 }
 
-export class VersionCommand implements Command {
+export class VersionCommand implements CliCommandInterface {
   constructor(
     private readonly filePath: string = './package.json'
   ) {}
@@ -31,9 +31,7 @@ export class VersionCommand implements Command {
     return importedContent.version;
   }
 
-  public getName(): string {
-    return '--version';
-  }
+  public readonly name = '--version';
 
   public async execute(..._parameters: string[]): Promise<void> {
     try {
