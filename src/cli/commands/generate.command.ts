@@ -1,43 +1,29 @@
 import got from 'got';
-import { Command } from './command.interface.js';
-import { MockServerData } from '../../shared/types/index.js';
-import { RentalOfferGenerator } from '../../shared/libs/offer-generator/index.js';
-import { getErrorMessage } from '../../shared/helpers/index.js';
-import { TSVFileWriter } from '../../shared/libs/file-writer/index.js';
+import TsvFileWriter from '../../shared/libs/file-writer/tsv-file-writer.js';
+import OfferGenerator from '../../shared/libs/offer-generator/tsv-offer-generator.js';
+import { MockData } from '../../shared/types/mock-server-data.type.js';
+import { CliCommandInterface } from './command.interface.js';
 
-export class GenerateCommand implements Command {
-  private initialData: MockServerData;
-  private async load(url: string) {
-    try {
-      this.initialData = await got.get(url).json();
-    } catch {
-      throw new Error(`Can't load data from ${url}`);
-    }
-  }
 
-  private async write(filepath: string, offerCount: number) {
-    const tsvOfferGenerator = new RentalOfferGenerator(this.initialData);
-    const tsvFileWriter = new TSVFileWriter(filepath);
-
-    for (let i = 0; i < offerCount; i++) {
-      await tsvFileWriter.write(tsvOfferGenerator.generate());
-    }
-  }
-
-  public getName(): string {
-    return '--generate';
-  }
+export default class GenerateCommand implements CliCommandInterface {
+  public readonly name = '--generate';
+  private initialData!: MockData;
 
   public async execute(...parameters: string[]): Promise<void> {
     const [count, filepath, url] = parameters;
     const offerCount = Number.parseInt(count, 10);
     try {
-      await this.load(url);
-      await this.write(filepath, offerCount);
-      console.info(`File ${filepath} was created!`);
-    } catch (error: unknown) {
-      console.error('Can\'t generate data');
-      console.error(getErrorMessage(error));
+      this.initialData = await got.get(url).json();
+    } catch {
+      console.log(`Can't fetch data from ${url}`);
+      return;
     }
+
+    const offerGeneratorString = new OfferGenerator(this.initialData);
+    const tsvFileWriter = new TsvFileWriter(filepath);
+    for (let i = 0; i < offerCount; i++) {
+      await tsvFileWriter.write(offerGeneratorString.generate());
+    }
+    console.log(`File ${filepath} was created`);
   }
 }

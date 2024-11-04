@@ -1,26 +1,26 @@
-import { WriteStream } from 'node:fs';
-import { createWriteStream } from 'node:fs';
-import { FileWriter } from './file-writer.interface.js';
+import { WriteStream, createWriteStream } from 'node:fs';
+import { FileWriterInterface } from './file-writer.interface.js';
 
-export class TSVFileWriter implements FileWriter {
+
+const CHUCK_SIZE = 2 ** 16;
+export default class TsvFileWriter implements FileWriterInterface {
   private stream: WriteStream;
 
-  constructor(filename: string) {
-    this.stream = createWriteStream(filename, {
+  constructor(public readonly filename: string) {
+    this.stream = createWriteStream(this.filename, {
       flags: 'w',
       encoding: 'utf-8',
+      highWaterMark: CHUCK_SIZE,
       autoClose: true,
     });
   }
 
-  public async write(row: string): Promise<unknown> {
-    const writeSuccess = this.stream.write(`${row}\n`);
-    if (! writeSuccess) {
+  public async write(row: string): Promise<void> {
+    if (!this.stream.write(`${row}\n`)) {
       return new Promise((resolve) => {
-        this.stream.once('drain', () => resolve(true));
+        this.stream.once('drain', () => resolve());
       });
     }
-
     return Promise.resolve();
   }
 }

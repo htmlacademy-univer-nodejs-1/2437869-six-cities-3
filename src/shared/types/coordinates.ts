@@ -1,4 +1,4 @@
-export interface Coordinates {
-  latitude: number; // Широта
-  longitude: number; // Долгота
+export type CoordinatesType = {
+  latitude: number,
+  longitude: number
 }

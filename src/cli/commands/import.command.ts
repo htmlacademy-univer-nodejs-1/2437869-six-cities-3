@@ -1,33 +1,32 @@
-import { Command } from './command.interface.js';
-import { TSVFileReader } from '../../shared/libs/file-reader/index.js';
-import { createOffer, getErrorMessage } from '../../shared/helpers/index.js';
+import chalk from 'chalk';
+import { getErrorMessage } from '../../shared/helpers/common.js';
+import { createOffer } from '../../shared/helpers/offer.js';
+import TSVFileReader from '../../shared/libs/file-reader/tsv-file-reader.js';
+import { CliCommandInterface } from './command.interface.js';
 
-export class ImportCommand implements Command {
-  public getName(): string {
-    return '--import';
-  }
+export default class ImportCommand implements CliCommandInterface {
+  public readonly name = '--import';
 
-  private onImportedLine(line: string) {
+  private onLine(line: string) {
     const offer = createOffer(line);
-    console.info(offer);
+    console.log(offer);
   }
 
-  private onCompleteImport(count: number) {
-    console.info(`${count} rows imported.`);
+  private onComplete(count: number) {
+    console.log(`${count} rows imported`);
   }
 
-  public async execute(...parameters: string[]): Promise<void> {
-    const [filename] = parameters;
+  public async execute(filename: string): Promise<void> {
+    if (filename === undefined) {
+      console.log(chalk.red('Укажите после команды --import путь к файлу'));
+    }
     const fileReader = new TSVFileReader(filename.trim());
-
-    fileReader.on('line', this.onImportedLine);
-    fileReader.on('end', this.onCompleteImport);
-
+    fileReader.on('line', this.onLine);
+    fileReader.on('end', this.onComplete);
     try {
       await fileReader.read();
-    } catch (error) {
-      console.error(`Can't import data from file: ${filename}`);
-      console.error(getErrorMessage(error));
+    } catch (err) {
+      console.error(chalk.red(`Can't read the file: ${getErrorMessage(err)}`));
     }
   }
 }

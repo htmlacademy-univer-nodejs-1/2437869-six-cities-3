@@ -1,65 +1,30 @@
-import { RentalOffer } from '../types/rental-offer.js';
-import { City } from '../types/city.enum.js';
-import { PropertyType } from '../types/property-type.enum.js';
-import { Amenity } from '../types/amenity.enum.js';
+import { ConveniencesType } from '../types/amenity.enum.js';
+import { CityType } from '../types/city.enum.js';
+import { CoordinatesType } from '../types/coordinates.js';
+import { TypeHousing } from '../types/property-type.enum.js';
+import { Offer } from '../types/rental-offer.js';
 import { User } from '../types/user.js';
-import { Coordinates } from '../types/coordinates.js';
 
-export function createOffer(offerData: string): RentalOffer {
-  const [
-    title,
-    description,
-    createdDate,
-    previewImage,
-    images,
-    isPremium,
-    isFavorite,
-    rating,
-    city,
-    propertyType,
-    rooms,
-    guests,
-    price,
-    amenities,
-    firstname,
-    lastname,
-    email,
-    avatar,
-    userType,
-    latitude,
-    longitude
-  ] = offerData.replace('\n', '').split('\t');
 
-  const author: User = {
-    name: `${firstname} ${lastname}`,
-    email,
-    avatar,
-    password: '', // Пароль здесь не используется, поэтому оставляем пустым или можно убрать
-    userType: userType as ('обычный' | 'pro'),
-  };
-
-  const coordinates: Coordinates = {
-    latitude: parseFloat(latitude),
-    longitude: parseFloat(longitude)
-  };
-
+export function createOffer(offerData: string): Offer {
+  const [name, description, date, city, previewImg, images, flagIsPremium, flagIsFavourites, rating, typeHousing, countRooms, countPeople, price, conveniences, author, countComments, coordinates] = offerData.replace('\n', '').split('\t');
   return {
-    title,
+    name,
     description,
-    publicationDate: new Date(createdDate),
-    city: City[city as keyof typeof City],
-    previewImage,
+    date: new Date(date),
+    city: city as CityType,
+    previewImg,
     images: images.split(';'),
-    isPremium: isPremium === 'true',
-    isFavorite: isFavorite === 'true',
-    rating: parseFloat(rating),
-    propertyType: PropertyType[propertyType as keyof typeof PropertyType],
-    rooms: Number.parseInt(rooms, 10),
-    guests: Number.parseInt(guests, 10),
+    flagIsPremium: flagIsPremium as unknown as boolean,
+    flagIsFavourites: flagIsFavourites as unknown as boolean,
+    rating: rating as unknown as 1 | 2 | 3 | 4 | 5,
+    typeHousing: typeHousing as TypeHousing,
+    countRooms: countRooms as unknown as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8,
+    countPeople: countPeople as unknown as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10,
     price: Number.parseInt(price, 10),
-    amenities: amenities.split(';').map((a) => Amenity[a as keyof typeof Amenity]),
-    author,
-    commentsCount: 0, // Количество комментариев не генерируется напрямую, можно обновить позже
-    coordinates
-  };
+    conveniences: conveniences as ConveniencesType,
+    author: author as unknown as User,
+    countComments: Number.parseInt(countComments, 10),
+    coordinates: coordinates.split(',') as unknown as CoordinatesType
+  } as Offer;
 }
