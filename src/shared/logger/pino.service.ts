@@ -1,3 +1,4 @@
+import { injectable } from 'inversify';
 import {LoggerInterface} from './logger.interface.js';
 import {Logger, pino} from 'pino';
 
