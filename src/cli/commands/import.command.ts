@@ -17,7 +17,7 @@ import chalk from 'chalk';
 
 
 const DEFAULT_DB_PORT = '27017';
-const DEFAULT_USER_PASSWORD = '123456';
+const DEFAULT_USER_PASSWORD = 'test';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = '--import';

@@ -2,7 +2,7 @@ import { WriteStream, createWriteStream } from 'node:fs';
 import { FileWriterInterface } from './file-writer.interface.js';
 
 
-const CHUCK_SIZE = 2 ** 16;
+//const CHUNCK_SIZE = 2 ** 16;
 export default class TsvFileWriter implements FileWriterInterface {
   private stream: WriteStream;
 
@@ -10,7 +10,7 @@ export default class TsvFileWriter implements FileWriterInterface {
     this.stream = createWriteStream(this.filename, {
       flags: 'w',
       encoding: 'utf-8',
-      highWaterMark: CHUCK_SIZE,
+      //highWaterMark: CHUNCK_SIZE,
       autoClose: true,
     });
   }
