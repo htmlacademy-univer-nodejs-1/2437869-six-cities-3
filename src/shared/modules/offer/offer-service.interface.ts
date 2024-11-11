@@ -13,6 +13,6 @@ export interface OfferServiceInterface {
     incCommentCount(offerId: string): Promise<DocumentType<OfferEntity> | null>;
     getPremium(): Promise<DocumentType<OfferEntity>[]>;
     getFavorite(): Promise<DocumentType<OfferEntity>[]>;
-    calculationRating(rating: number, newRating: number, countRating:number, offerId:string): Promise<void>;
+    calculateRating(rating: number, newRating: number, countRating:number, offerId:string): Promise<void>;
     exists(documentId: string): Promise<boolean>;
 }
