@@ -7,6 +7,7 @@ import { getMongoURI } from '../shared/helpers/db.js';
 import { DatabaseClientInterface } from '../shared/database-client/databace-client.interface.js';
 import express, {Express} from 'express';
 import { BaseController } from '../shared/controller/base-controller.js';
+import { ExceptionFilterInterface } from '../shared/exception-filter/exception-filter.interface.js';
 
 @injectable()
 export default class Application {
