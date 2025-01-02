@@ -58,7 +58,7 @@ export default class Application {
   private async _initExceptionFilters() {
     this.logger.info('Init exception filters');
     this.server.use(this.exceptionFilter.catch.bind(this.exceptionFilter));
-    this.logger.info('Exception filters compleated');
+    this.logger.info('Exception filters completed');
   }
 
   public async init() {
