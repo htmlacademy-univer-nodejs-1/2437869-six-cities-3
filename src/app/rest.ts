@@ -17,7 +17,8 @@ export default class Application {
               @inject(AppComponent.DatabaseClientInterface) private readonly databaseClient: DatabaseClientInterface,
               @inject(AppComponent.ExceptionFilterInterface) private readonly exceptionFilter: ExceptionFilterInterface,
               @inject(AppComponent.UserController) private readonly userController: BaseController,
-              @inject(AppComponent.OfferController) private readonly offerController: BaseController) {
+              @inject(AppComponent.OfferController) private readonly offerController: BaseController,
+              @inject(AppComponent.CommentController) private readonly commentController: BaseController) {
     this.server = express();
   }
 
@@ -46,6 +47,7 @@ export default class Application {
     this.logger.info('Controller init');
     this.server.use('/users', this.userController.router);
     this.server.use('/offers', this.offerController.router);
+    this.server.use('/comments', this.commentController.router);
     this.logger.info('Controller completed');
   }
 
