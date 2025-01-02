@@ -1,74 +1,17 @@
 openapi: 3.0.3
 info:
-  title: API для проекта «Шесть городов»
-  description: API для работы с платформой «Шесть городов», включающая предложения по аренде, пользователей и комментарии.
+  title: API сервер для проекта «Шесть городов».
+  description: API сервер для проекта «Шесть городов».
   version: 1.0.0
-
 servers:
   - url: 'https'
 
 paths:
-  /users:
-    post:
-      tags:
-        - users
-      summary: Регистрация нового пользователя
-      description: Создает нового пользователя на платформе
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/createUser'
-        required: true
-      responses:
-        201:
-          description: Пользователь успешно зарегистрирован
-        400:
-          description: Ошибка валидации данных
-        409:
-          description: Пользователь с таким email уже существует
-
-  /users/login:
-    post:
-      tags:
-        - users
-      summary: Авторизация пользователя
-      description: Позволяет пользователю войти в систему, используя логин и пароль
-      responses:
-        201:
-          description: Успешный вход
-        400:
-          description: Ошибка валидации данных
-
-    get:
-      tags:
-        - users
-      summary: Проверка авторизованного пользователя
-      description: Получение информации о текущем пользователе
-      responses:
-        200:
-          description: Успешная проверка состояния пользователя
-        400:
-          description: Ошибка валидации данных
-
-  /termination:
-    get:
-      tags:
-        - users
-      summary: Выход из системы
-      description: Осуществляет выход пользователя из приложения (если авторизация происходит через сессии)
-      responses:
-        200:
-          description: Успешный выход
-        401:
-          description: Неавторизованный пользователь
-
   /offers:
     post:
       tags:
         - offers
-      summary: Добавление нового предложения
-      description: Создание нового объявления на платформе
+      summary: Создание нового предложения
       requestBody:
         content:
           application/json:
@@ -77,228 +20,306 @@ paths:
         required: true
       responses:
         201:
-          description: Предложение успешно создано
+          description: Новое предложения создано
         400:
-          description: Ошибка валидации данных
+          description: Некорректная валидация
         401:
-          description: Неавторизованный пользователь
+          description: Не авторизованный пользователь
+      description: Создание нового предложения
 
     put:
       tags:
         - offers
-      summary: Обновление предложения
-      description: Редактирование существующего объявления
+      summary: Редактирование предложения
       responses:
         200:
-          description: Предложение успешно обновлено
+          description: Предложение успешно отредактировано
         400:
-          description: Пользователь может редактировать только свои объявления
+          description: Пользователь может редактировать только свои предложения
         401:
-          description: Неавторизованный пользователь
+          description: Не авторизованный пользователь
+      description: Редактирование существующего предложения
 
     delete:
       tags:
         - offers
-      summary: Удаление предложения
-      description: Удаляет объявление пользователя
+      summary: Удаление предложения по аренде
       responses:
         200:
-          description: Предложение удалено
+          description: Предложение успешно удалено
         400:
-          description: Пользователь может удалять только свои объявления
+          description: Пользователь может удалять только свои предложения
         401:
-          description: Неавторизованный пользователь
+          description: Не авторизованный пользователь
+      description: Удаление существующего объявления
+
+    get:
+      parameters:
+        - name: countRequests
+          in: query
+          description: Количество запрашиваемых предложений (Опционально)
+          required: false
+          schema:
+            type: integer
+      tags:
+        - offers
+      summary: Список предложений по аренде
+      responses:
+        200:
+          description: Успешно получен список предложений
+        401:
+          description: Не авторизованный пользователь
 
   /offers/details:
     get:
       tags:
         - offers
-      summary: Получение детальной информации по предложению
+      summary: Детальная информация по предложению
       responses:
         200:
-          description: Информация успешно получена
+          description: Детальная информация по предложению успешно получена
 
-  /offers?countRequests=60:
+  /comments?count=50:
     get:
       tags:
-        - offers
-      summary: Список предложений
-      description: Получение списка предложений по аренде
+        - comment
+      summary: Список комментариев для предложения
       responses:
         200:
-          description: Список предложений успешно получен
+          description: Список комментариев для объявления успешно получен. Если пользователь не вводил количество комментариев, то по умолчанию выводится 50
+    post:
+      tags:
+        - comment
+      summary: Добавление комментария
+      responses:
+        201:
+          description: Успешное добавление комментария
+        400:
+          description: Некорректная валидация
+        401:
+          description: Не авторизованный пользователь
+
+  /users:
+    post:
+      tags:
+        - users
+      summary: Создание нового пользователя
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+        required: true
+
+      responses:
+        201:
+          description: Успешное создание нового пользователя
+        400:
+          description: Некорректная валидация
         401:
           description: Неавторизованный пользователь
+        409:
+          description: Пользователь с таким email уже существует.
+
+
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Вход в закрытую часть приложения
+      description: Авторизует пользователя на основе логина и пароля
+      responses:
+        201:
+          description: Успещная авторизация
+        400:
+          description: Некорректная валидация
+
+    get:
+      tags:
+        - users
+      summary: Проверка состояния пользователя
+      description: Возвращает информацию по авторизованному пользователю
+      responses:
+        200:
+          description: Успешная проверка
+        400:
+          description: Некорректная валидация
+
+  /termination:
+    get:
+      tags:
+        - users
+      summary: Выход из закрытой части приложения (только если авторизация выполняется на основе сессий)
+      responses:
+        200:
+          description: Успешный выход
+        401:
+          description: Не авторизованный пользователь
 
   /offers/premium:
     get:
       tags:
         - offers
-      summary: Премиальные предложения по аренде
-      description: Получение списка премиальных предложений для города
+      summary: Премиальные предложения для города
       responses:
         200:
-          description: Получены премиальные предложения (не более 3)
+          description: Возвращает не более 3 премиальных предложения
 
   /offers/favorite:
     get:
       tags:
         - offers
       summary: Список избранных предложений
-      description: Получение списка избранных объявлений пользователя
       responses:
         200:
-          description: Список избранных предложений успешно получен
+          description: Возвращает список избранных предложений
         401:
-          description: Неавторизованный пользователь
-
+          description: Не авторизованный пользователь
     post:
       tags:
         - offers
-      summary: Добавление в избранное
-      description: Добавление предложения в список избранных
+      summary: Добавление предложения в избранное
       responses:
         201:
-          description: Предложение успешно добавлено в избранное
+          description: Добавление прошло успешно
         401:
-          description: Неавторизованный пользователь
-
+          description: Не авторизованный пользователь
     delete:
       tags:
         - offers
-      summary: Удаление из избранного
-      description: Удаление предложения из списка избранных
+      summary: Удаление предложения из избранного
       responses:
         200:
-          description: Предложение успешно удалено из избранного
+          description: Удаление прошло успешно
         401:
-          description: Неавторизованный пользователь
+          description: Не авторизованный пользователь
 
-  /comments?count=50:
-    get:
-      tags:
-        - comment
-      summary: Список комментариев
-      description: Получение списка комментариев для предложений
-      responses:
-        200:
-          description: Список комментариев успешно получен
-
-    post:
-      tags:
-        - comment
-      summary: Добавление нового комментария
-      description: Оставление комментария к предложению
-      responses:
-        201:
-          description: Комментарий успешно добавлен
-        400:
-          description: Ошибка валидации данных
-        401:
-          description: Неавторизованный пользователь
 
 tags:
   - name: users
-    description: Операции с пользователями
+    description: Для действий с пользователями
   - name: offers
-    description: Операции с предложениями
-  - name: comments
-    description: Операции с комментариями
+    description: Действия с объявлениями
+  - name: comment
+    description: Действия с комментариями
 
 components:
   schemas:
     createUser:
       type: object
+
       properties:
         email:
           type: string
-          example: "ivan.sidorov@domain.com"
+          example: "keks@htmlacademy.ru"
+
         name:
           type: string
-          example: "Иван Сидоров"
+          example: 'Иван Петров'
+
         password:
           type: string
           example: "123456"
-        avatar:
+
+        avatar?:
           type: string
-          example: "avatar.jpg"
+          example: 'studio-01.jpg'
+
         useType:
           type: string
-          example: "pro"
+          example: 'pro'
 
     user:
       type: object
+
       properties:
         id:
           type: string
           example: "6329c3d6a04ab1061c6425ea"
+
         email:
           type: string
-          example: "ivan.sidorov@domain.com"
+          example: 'keks@htmlacademy.ru'
 
     createOffers:
       type: object
       properties:
         name:
           type: string
-          example: "Шикарное жилье"
+          example: "Ключ к успеху"
+
         description:
           type: string
-          example: "Предлагаем квартиры и дома в центре города с отличным ремонтом и удобствами."
+          example: "Мы предлагаем квартиры и дома в лучших районах города, чтобы вы могли наслаждаться комфортом и уютом своего нового дома."
+
         date:
           type: string
-          example: "2023-04-09"
+          format: date
+          example: '2023.04.09'
+
         city:
           type: string
-          example: "Москва"
+          example: 'Paris'
+
         previewImg:
           type: string
-          example: "apartment-preview.jpg"
+          example: "studio-photos.jpg"
+
         images:
           type: array
           items:
             type: string
-            example: "apartment-01.jpg"
+          example: [ "apartment-01.jpg;","apartment-02.jpg;" ]
+
         flagIsPremium:
           type: boolean
-          example: true
+
         flagIsFavourites:
           type: boolean
-          example: false
+
         rating:
           type: number
-          example: 4.8
+          example: 5
+
         typeHousing:
           type: string
-          example: "Квартира"
+          example: 'House'
+
         countRooms:
-          type: integer
-          example: 4
+          type: number
+          example: 2
+
         countPeople:
-          type: integer
-          example: 6
+          type: number
+          example: 2
+
         price:
-          type: integer
-          example: 25000
+          type: number
+          example: 10000
+
         conveniences:
           type: string
-          example: "Интернет, кондиционер"
+          example: 'Breakfast'
+
         author:
           type: string
-          example: "Алексей Смирнов"
+          example: "Петр Иванов"
+
         countComments:
-          type: integer
-          example: 15
+          type: number
+          example: 1
+
         coordinates:
           type: string
-          example: "55.7558;37.6176"
+          example: '48.85661;2.351499'
 
     createComments:
       type: object
       properties:
         text:
           type: string
-          example: "Отличное предложение!"
+          example: "Супер"
         author:
           type: string
-          example: "Олег Петров"
+          example: 'Иван Петров'
