@@ -16,6 +16,7 @@ import CreateOfferDto from '../dto/create-offer.dto.js';
 import UpdateOfferDto from '../dto/update-offer.dto.js';
 import { OfferServiceInterface } from '../offer-service.interface.js';
 import { OfferRdo } from '../rdo/offer-rdo.js';
+import { ExistingDocumentMiddleware } from '../../../middleware/document-exists.middleware.js';
 
 @injectable()
 export default class OfferController extends BaseController {
@@ -38,13 +39,19 @@ export default class OfferController extends BaseController {
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.show,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new ExistingDocumentMiddleware(this.offersService, 'Offer', 'offerId'),
+      ]
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Delete,
       handler: this.delete,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new ExistingDocumentMiddleware(this.offersService, 'Offer', 'offerId')
+      ]
     });
     this.addRoute({
       path: '/:offerId',
@@ -53,6 +60,7 @@ export default class OfferController extends BaseController {
       middlewares: [
         new ValidateObjectIdMiddleware('offerId'),
         new ValidateDtoMiddleware(UpdateOfferDto),
+        new ExistingDocumentMiddleware(this.offersService, 'Offer', 'offerId'),
       ]
     });
     this.addRoute({
@@ -105,12 +113,10 @@ export default class OfferController extends BaseController {
     this.ok(res, fillDTO(OfferRdo, updatedOffer));
   }
 
-  public async show(_req: Request, _res: Response): Promise<void> {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'OfferController'
-    );
+  public async show({ params }: Request<ParamOfferId>, res: Response): Promise<void>{
+    const { offerId } = params;
+    const offer = await this.offersService.findById(offerId);
+    this.ok(res, fillDTO(OfferRdo, offer));
   }
 
   public async getComments({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
